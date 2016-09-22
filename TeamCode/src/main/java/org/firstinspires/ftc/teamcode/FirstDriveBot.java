@@ -35,24 +35,18 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
+ *  FirstDriveBot - first robot in class
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ *  @author Jochen Fischer
+ *  @version 1.0 - 2016-09-21
  */
 
-@TeleOp(name="TestBed (Iterative)", group="Elon")  // @Autonomous(...) is the other common choice
+@TeleOp(name="FirstDriveBot", group="Elon")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class TestBedIterative extends OpMode
+public class FirstDriveBot extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -70,39 +64,24 @@ public class TestBedIterative extends OpMode
     }
 
     /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
-        runtime.reset();
-    }
-
-    /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        double speedLeft = gamepad1.left_stick_y;
-        double speedRight = gamepad1.right_stick_y;
+        double speed = gamepad1.left_stick_y;
+        double turn  = gamepad1.right_stick_x;
+
+        telemetry.addData("speed", String.format("%6.3f", speed));
+        telemetry.addData("turn", String.format("%6.3f", turn));
+
+        double speedLeft = Range.clip(speed + turn, -1.0, 1.0);
+        double speedRight = Range.clip(speed - turn, -1.0, 1.0);
 
         robot.motorLeft.setPower(speedLeft);
         robot.motorRight.setPower(speedRight);
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
 
 }

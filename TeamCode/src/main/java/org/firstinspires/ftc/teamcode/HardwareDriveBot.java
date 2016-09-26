@@ -7,20 +7,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This is NOT an opmode.
+ *  @author Jochen Fischer
+ *  @version 1.0
  *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
+ *  Hardware definition for the Elon Drivebot.
  *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
+ *  The robot has a simple drive base with 2 motors:
+ *      motorLeft
+ *      motorRight
  *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
  */
 public class HardwareDriveBot
 {
@@ -28,9 +23,11 @@ public class HardwareDriveBot
     public DcMotor  motorLeft   = null;
     public DcMotor  motorRight  = null;
 
+    // useful constants:
     public static final double SLOW_POWER = 0.2;
     public static final double POWER = 1.0;
     public static final double STOP = 0.0;
+    public static final int ENC_ROTATION = 1120;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -56,10 +53,13 @@ public class HardwareDriveBot
         motorLeft.setPower(0);
         motorRight.setPower(0);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // reset encoders
+        motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Set all motors to run with encoders.
+        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /***

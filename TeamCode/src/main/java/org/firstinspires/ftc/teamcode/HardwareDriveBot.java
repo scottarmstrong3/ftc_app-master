@@ -28,6 +28,7 @@ public class HardwareDriveBot
     public static final double POWER = 1.0;
     public static final double STOP = 0.0;
     public static final int ENC_ROTATION = 1120;
+    public static final double WHEEL_DIAMETER = 4.0;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -60,6 +61,13 @@ public class HardwareDriveBot
         // Set all motors to run with encoders.
         motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    // Stop both motors
+    void stop() {
+        motorLeft.setPower(HardwareDriveBot.STOP);
+        motorRight.setPower(HardwareDriveBot.STOP);
+
     }
 
     /***

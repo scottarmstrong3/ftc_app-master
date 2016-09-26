@@ -32,8 +32,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Move2Sec - moves the robot for 2 seconds
@@ -65,11 +68,59 @@ public class MoveWithEncoder extends LinearOpMode {
 
         sleep(2000);  // wait to read the display
 
+        moveRobot(0.3, 24.0);
+
+        sleep(2000);
+
+        //------------------------------------
+        // turn robot
         // start both motors
-        robot.motorLeft.setPower(HardwareDriveBot.SLOW_POWER);
+
+        // reset encoders
+        robot.motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Set all motors to run with encoders.
+        robot.motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.motorLeft.setPower(-HardwareDriveBot.SLOW_POWER);
         robot.motorRight.setPower(HardwareDriveBot.SLOW_POWER);
 
-        int encTarget = 4 * HardwareDriveBot.ENC_ROTATION;  // 4*1120
+        int encTarget = 1500;
+
+        // wait until we reach our target position
+        int pos;
+        do {
+            pos = robot.motorRight.getCurrentPosition();
+            telemetry.addData("Encoder", pos);
+            telemetry.update();
+        }
+        while (pos < encTarget);
+
+        // stop the robot:
+        robot.stop();
+
+        telemetry.addData("Encoder", robot.motorRight.getCurrentPosition());
+        telemetry.update();
+
+        sleep(4000);
+    }
+
+    void moveRobot (double speed, double inches) {
+        // reset encoders
+        robot.motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Set all motors to run with encoders.
+        robot.motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double rotations = inches / (Math.PI * HardwareDriveBot.WHEEL_DIAMETER);
+        int encTarget = (int) (rotations * HardwareDriveBot.ENC_ROTATION);
+
+        robot.motorLeft.setPower(speed);
+        robot.motorRight.setPower(speed);
 
         // wait until we reach our target position
         int pos;
@@ -81,13 +132,10 @@ public class MoveWithEncoder extends LinearOpMode {
         while (pos < encTarget);
 
         // stop the robot:
-        robot.motorLeft.setPower(HardwareDriveBot.STOP);
-        robot.motorRight.setPower(HardwareDriveBot.STOP);
+        robot.stop();
 
-        telemetry.addData("Encoder", robot.motorLeft.getCurrentPosition());
-        telemetry.update();
-
-
-        sleep(4000);
+        System.out.println("Encoder" + robot.motorLeft.getCurrentPosition());
+        Log.i("ROBOT", "Encoder" + robot.motorLeft.getCurrentPosition());
     }
+
 }

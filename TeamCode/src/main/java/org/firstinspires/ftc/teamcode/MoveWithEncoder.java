@@ -107,7 +107,17 @@ public class MoveWithEncoder extends LinearOpMode {
         sleep(4000);
     }
 
-    void moveRobot (double speed, double inches) {
+    /**
+     * moveRobot - drives robot forward by a given distance at a given speed
+     *
+     * @author Jochen Fischer
+     * @version 1.0 - 9/28/2016
+     *
+     * @param speed     speed of robot between -1.0 ... 1.0
+     * @param inches    distance the robot will travel
+     * @throws InterruptedException
+     */
+    void moveRobot (double speed, double inches) throws InterruptedException {
         // reset encoders
         robot.motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -123,6 +133,11 @@ public class MoveWithEncoder extends LinearOpMode {
         robot.motorRight.setPower(speed);
 
         // wait until we reach our target position
+        while (robot.motorLeft.getCurrentPosition() < encTarget) {
+            idle();
+        }
+
+        /*---- alternate version, as reference -------
         int pos;
         do {
             pos = robot.motorLeft.getCurrentPosition();
@@ -130,6 +145,7 @@ public class MoveWithEncoder extends LinearOpMode {
             telemetry.update();
         }
         while (pos < encTarget);
+        --------------------------------------------*/
 
         // stop the robot:
         robot.stop();

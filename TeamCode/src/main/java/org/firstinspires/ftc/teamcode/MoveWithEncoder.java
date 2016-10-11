@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Move2Sec - moves the robot for 2 seconds
+ * MoveWithEncoder - Simple move forward using motor encoders
  *
  * @autor Jochen Fischer
  */

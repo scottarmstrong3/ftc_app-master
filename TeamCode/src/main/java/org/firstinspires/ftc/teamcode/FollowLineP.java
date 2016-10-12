@@ -29,7 +29,14 @@ public class FollowLineP extends LinearOpMode {
     // parameters used by the controller:
     private double speed = 0.2;
     private int reference = (5+47)/2;
-    private double Kp = 0.005;
+    private double Kp = 0.014;
+    private double Ki = 0.0;
+    private double Kd = 0.0;
+
+    private double dt = 50.0;  // interval in millisconds
+    private double dT = dt/1000.0;   // interval in secondes
+
+    private int loopCounter = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -60,7 +67,16 @@ public class FollowLineP extends LinearOpMode {
             robot.motorLeft.setPower(speed - turn);
             robot.motorRight.setPower(speed + turn);
 
-            idle();
+            String message = String.format("%s %d",
+                    runtime.toString(), brightness);
+            Log.i("ROBOT", message);
+
+            // wait for the next time slot:
+            loopCounter++;
+            double nextTimeSlot = loopCounter * dt;
+            while (runtime.milliseconds() < nextTimeSlot) {
+                idle();
+            }
         }
     }
 }
